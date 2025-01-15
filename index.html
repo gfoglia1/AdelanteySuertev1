@@ -1,0 +1,26 @@
+<!-- HTML (copia esto en el panel HTML) -->
+<div id="app">
+  <!-- Pantalla de Login -->
+  <div id="loginScreen">
+    <h1>Adelante y Suerte</h1>
+    <form id="loginForm">
+      <input type="text" id="nombre" placeholder="Nombre">
+      <input type="password" id="password" placeholder="Contraseña">
+      <input type="text" id="club" placeholder="Club">
+      <input type="number" id="handicap" placeholder="Handicap">
+      <button type="submit">Ingresar</button>
+    </form>
+  </div>
+
+  <!-- Pantalla Principal -->
+  <div id="mainScreen" class="hidden">
+    <h2>Áreas de entrenamiento</h2>
+    <div class="areas">
+      <button onclick="selectArea('putter')">Putter</button>
+      <button onclick="selectArea('juegoCorto')">Juego corto</button>
+      <button onclick="selectArea('bunker')">Bunker</button>
+      <button onclick="selectArea('hierros')">Hierros</button>
+      <button onclick="selectArea('driver')">Driver y maderas</button>
+    </div>
+  </div>
+</div>
