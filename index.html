@@ -2,47 +2,319 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>Adelante y Suerte</title>
+  <title>adelante y suerte claude</title>
   <link rel="stylesheet" href="./style.css">
 
 </head>
 <body>
 <!-- partial:index.partial.html -->
-<div class="page" id="homePage">
-  <h1>Aplicación de Golf</h1>
-  <button onclick="showPage('gamePage')">Jugar</button>
-  <button onclick="showPage('statisticsPage')">Estadísticas</button>
-  <button onclick="showPage('historyPage')">Historial</button>
-</div>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adelante y Suerte</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    .button-container {
+      display: flex;
+      gap: 20px;
+    }
+    button {
+      font-size: 1.2rem;
+      padding: 10px 20px;
+      color: white;
+      background-color: #2980b9;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #3498db;
+    }
+    .hidden {
+      display: none;
+    }
+    .area-container, .game-container, .result-container, .post-result-container, .history-container {
+      margin-top: 20px;
+    }
+    select {
+      font-size: 1rem;
+      padding: 5px;
+      margin: 10px;
+    }
+    input {
+      font-size: 1rem;
+      padding: 5px;
+      margin: 10px;
+      width: 200px;
+    }
+    canvas {
+      margin-top: 20px;
+    }
+    ul {
+      text-align: left;
+      padding: 0;
+      list-style: none;
+    }
+    li {
+      margin: 5px 0;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Adelante y Suerte</h1>
+  <div class="button-container">
+    <button onclick="startGame()">Jugar</button>
+    <button onclick="viewHistory()">Ver Historial</button>
+  </div>
 
-<div class="page" id="gamePage">
-  <h2>Elige un área y un juego</h2>
-  <label for="area">Área:</label>
-  <select id="area">
-    <option value="">Selecciona un área</option>
-  </select>
+  <div id="areaSelection" class="hidden area-container">
+    <h2>Elige el área del juego</h2>
+    <select id="areaSelect" onchange="selectArea()">
+      <option value="">--Selecciona un área--</option>
+      <option value="practica">Práctica</option>
+      <option value="competencia">Competencia</option>
+    </select>
+  </div>
 
-  <label for="game">Juego:</label>
-  <select id="game" disabled>
-    <option value="">Selecciona un juego</option>
-  </select>
+  <div id="gameSelection" class="hidden game-container">
+    <h2>Elige el juego específico</h2>
+    <select id="gameSelect">
+      <option value="">--Selecciona un juego--</option>
+    </select>
+    <button onclick="showGameInstructions()">Ver Instrucciones</button>
+    <button onclick="startSelectedGame()">Comenzar</button>
+    <div id="instructions" class="hidden">
+      <h3>Instrucciones del Juego</h3>
+      <p id="instructionsText"></p>
+    </div>
+  </div>
 
-  <div id="gameDetails"></div>
-  
-  <button onclick="showPage('homePage')">Volver al inicio</button>
-</div>
+  <div id="resultInput" class="hidden result-container">
+    <h2>Registra tu resultado</h2>
+    <input type="text" id="result" placeholder="Ingresa tu resultado" />
+    <button onclick="saveResult()">Grabar</button>
+  </div>
 
-<div class="page" id="statisticsPage">
-  <h2>Estadísticas</h2>
-  <p>Estadísticas de juego aquí...</p>
-  <button onclick="showPage('homePage')">Volver al inicio</button>
-</div>
+  <div id="postResult" class="hidden post-result-container">
+    <h2>Acciones</h2>
+    <button onclick="sendWhatsApp()">Enviar por WhatsApp</button>
+    <button onclick="viewGameHistory()">Ver Historial</button>
+    <button onclick="goToMainMenu()">Volver al Menú Principal</button>
+  </div>
 
-<div class="page" id="historyPage">
-  <h2>Historial de Resultados</h2>
-  <ul id="historyList"></ul>
-  <button onclick="showPage('homePage')">Volver al inicio</button>
-</div>
+  <div id="historyContainer" class="hidden history-container">
+    <h2>Historial de Juegos</h2>
+    <canvas id="historyChart" width="400" height="200"></canvas>
+    <button onclick="goToMainMenu()">Volver al Menú Principal</button>
+  </div>
+
+  <div id="gameHistoryContainer" class="hidden history-container">
+    <h2>Historial del Juego: <span id="currentGameTitle"></span></h2>
+    <ul id="gameHistoryList"></ul>
+    <button onclick="goToMainMenu()">Volver al Menú Principal</button>
+  </div>
+
+  <script>
+    let currentGame = "";
+    let currentResult = "";
+    let gameHistory = {};
+
+    function startGame() {
+      document.getElementById('areaSelection').classList.remove('hidden');
+      document.getElementById('gameSelection').classList.add('hidden');
+      document.getElementById('resultInput').classList.add('hidden');
+      document.getElementById('postResult').classList.add('hidden');
+      document.getElementById('historyContainer').classList.add('hidden');
+      document.getElementById('gameHistoryContainer').classList.add('hidden');
+      document.querySelector('.button-container').classList.remove('hidden');
+    }
+
+    function viewHistory() {
+      document.getElementById('historyContainer').classList.remove('hidden');
+      document.getElementById('areaSelection').classList.add('hidden');
+      document.getElementById('gameSelection').classList.add('hidden');
+      document.getElementById('resultInput').classList.add('hidden');
+      document.getElementById('postResult').classList.add('hidden');
+      document.getElementById('gameHistoryContainer').classList.add('hidden');
+      renderChart();
+    }
+
+    function selectArea() {
+      const area = document.getElementById('areaSelect').value;
+      const gameSelect = document.getElementById('gameSelect');
+
+      gameSelect.innerHTML = '<option value="">--Selecciona un juego--</option>';
+
+      if (area === 'practica') {
+        gameSelect.innerHTML += '<option value="putting">Putting</option>';
+        gameSelect.innerHTML += '<option value="driving">Driving Range</option>';
+      } else if (area === 'competencia') {
+        gameSelect.innerHTML += '<option value="strokePlay">Stroke Play</option>';
+        gameSelect.innerHTML += '<option value="matchPlay">Match Play</option>';
+      }
+
+      if (area) {
+        document.getElementById('gameSelection').classList.remove('hidden');
+      } else {
+        document.getElementById('gameSelection').classList.add('hidden');
+      }
+    }
+
+    function showGameInstructions() {
+      const game = document.getElementById('gameSelect').value;
+      const instructions = document.getElementById('instructions');
+      const instructionsText = document.getElementById('instructionsText');
+
+      if (game === "putting") {
+        instructionsText.textContent = "El objetivo es meter la bola en el hoyo con la menor cantidad de golpes posible desde una distancia corta.";
+      } else if (game === "driving") {
+        instructionsText.textContent = "Practica tu golpe largo para alcanzar la mayor distancia posible.";
+      } else if (game === "strokePlay") {
+        instructionsText.textContent = "Compite sumando el menor número de golpes en todo el recorrido.";
+      } else if (game === "matchPlay") {
+        instructionsText.textContent = "Compite hoyo a hoyo contra otro jugador, ganando quien gane más hoyos.";
+      } else {
+        instructionsText.textContent = "Por favor selecciona un juego para ver las instrucciones.";
+      }
+
+      instructions.classList.remove('hidden');
+    }
+
+    function startSelectedGame() {
+      currentGame = document.getElementById('gameSelect').value;
+
+      if (currentGame) {
+        document.getElementById('resultInput').classList.remove('hidden');
+        document.getElementById('instructions').classList.add('hidden');
+      } else {
+        alert('Por favor selecciona un juego.');
+      }
+    }
+
+    function saveResult() {
+      currentResult = document.getElementById('result').value;
+
+      if (currentResult) {
+        const today = new Date().toISOString().split('T')[0];
+        if (!gameHistory[currentGame]) {
+          gameHistory[currentGame] = {};
+        }
+        if (!gameHistory[currentGame][today]) {
+          gameHistory[currentGame][today] = [];
+        }
+        gameHistory[currentGame][today].push(currentResult);
+
+        document.getElementById('resultInput').classList.add('hidden');
+        document.getElementById('postResult').classList.remove('hidden');
+        alert('Resultado grabado exitosamente.');
+      } else {
+        alert('Por favor ingresa un resultado.');
+      }
+    }
+
+    function sendWhatsApp() {
+      const url = `https://wa.me/?text=He jugado ${currentGame} y mi resultado fue: ${currentResult}`;
+      window.open(url, '_blank');
+    }
+
+    function viewGameHistory() {
+      const today = new Date().toISOString().split('T')[0];
+      const gameHistoryList = document.getElementById('gameHistoryList');
+      const currentGameHistory = gameHistory[currentGame] && gameHistory[currentGame][today];
+
+      if (currentGameHistory) {
+        document.getElementById('gameHistoryContainer').classList.remove('hidden');
+        document.getElementById('postResult').classList.add('hidden');
+        document.getElementById('currentGameTitle').textContent = currentGame;
+
+        gameHistoryList.innerHTML = '';
+        currentGameHistory.forEach((result, index) => {
+          const li = document.createElement('li');
+          li.textContent = `Juego ${index + 1}: ${result}`;
+          gameHistoryList.appendChild(li);
+        });
+      } else {
+        alert('No tienes historial para este juego.');
+      }
+    }
+
+    function renderChart() {
+      const ctx = document.getElementById('historyChart').getContext('2d');
+      const data = {
+        labels: [],
+        datasets: [{
+          label: 'Juegos Jugados',
+          data: [],
+          borderColor: 'rgb(75, 192, 192)',
+          fill: false
+        }]
+      };
+
+      Object.keys(gameHistory).forEach(game => {
+        Object.keys(gameHistory[game]).forEach(date => {
+          if (!data.labels.includes(date)) {
+            data.labels.push(date);
+          }
+          const index = data.labels.indexOf(date);
+          data.datasets[0].data[index] = (data.datasets[0].data[index] || 0) + gameHistory[game][date].length;
+        });
+      });
+
+      new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              ticks: {
+                autoSkip: true,
+                maxRotation: 0
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function goToMainMenu() {
+      document.getElementById('areaSelection').classList.add('hidden');
+      document.getElementById('gameSelection').classList.add('hidden');
+      document.getElementById('resultInput').classList.add('hidden');
+      document.getElementById('postResult').classList.add('hidden');
+      document.getElementById('historyContainer').classList.add('hidden');
+      document.getElementById('gameHistoryContainer').classList.add('hidden');
+      document.querySelector('.button-container').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
 <!-- partial -->
   <script  src="./script.js"></script>
 

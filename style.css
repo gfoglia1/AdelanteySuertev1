@@ -1,164 +1,48 @@
-/* Reset y estilos básicos */
-* {
+body {
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  background-color: #f4f4f9;
 }
 
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f7fc;
-  color: #333;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  flex-direction: column;
-}
-
-h1, h2 {
-  color: #2c3e50;
-  font-weight: 700;
-  text-align: center;
-}
-
-/* Estilos de botones */
-button {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  margin: 10px;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 220px;
-  max-width: 80%;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-button:hover {
-  background-color: #2980b9;
-}
-
-/* Estilos de los select inputs */
-select, input {
-  font-size: 16px;
-  padding: 12px;
-  margin: 10px 0;
+.container {
   width: 100%;
-  max-width: 300px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  transition: border-color 0.3s ease;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-}
-
-select:focus, input:focus {
-  border-color: #3498db;
-  outline: none;
-}
-
-/* Fondo de las páginas */
-.page {
-  display: none;
+  max-width: 800px;
+  margin: 0 auto;
   padding: 20px;
-  border-radius: 10px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin: 20px;
-  width: 100%;
-  max-width: 500px;
-  text-align: center;
 }
 
-.page:target {
-  display: block;
+.hidden {
+  display: none;
 }
 
-h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
-}
-
-h1 {
-  font-size: 32px;
-  margin-bottom: 30px;
-}
-
-/* Página de inicio */
-#homePage {
-  text-align: center;
-}
-
-#homePage h1 {
-  font-size: 36px;
-  margin-bottom: 30px;
-}
-
-/* Página de juego */
-#gamePage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-#gamePage select {
-  width: 250px;
-  max-width: 90%;
-}
-
-#gamePage #gameDetails {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: #ecf0f1;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-#gamePage input {
-  width: 180px;
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
   margin-top: 10px;
 }
 
-/* Página de estadísticas y historial */
-#statisticsPage, #historyPage {
-  font-size: 16px;
-  text-align: center;
+button:hover {
+  background-color: #45a049;
 }
 
-#historyPage ul {
-  list-style-type: none;
-  padding-left: 0;
+select, input[type="number"] {
+  padding: 10px;
+  margin: 10px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#instructions {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #ddd;
   margin-top: 20px;
 }
 
-#historyPage li {
-  background-color: #ecf0f1;
-  margin: 10px 0;
-  padding: 12px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-/* Animación suave de transiciones */
-.page {
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+h1 {
+  color: #333;
 }
